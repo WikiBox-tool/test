@@ -14,7 +14,7 @@
 </head>
 <body>
   <h1>スコア: <span id="score">0</span></h1>
-  <canvas id="gameCanvas" width="240" height="400"></canvas>
+  <canvas id="gameCanvas" width="200" height="400"></canvas>
   <div class="controls">
     <button class="button" id="btnLeft">←</button>
     <button class="button" id="btnRotate">⟳</button>
@@ -38,12 +38,11 @@
     ];
     let currentPiece = randomPiece();
     let dropStart = Date.now();
-    let gameOver = false;
     let score = 0;
     
     function randomPiece() {
       const p = pieces[Math.floor(Math.random() * pieces.length)];
-      return { shape: p.shape, color: p.color, x: Math.floor((COLS - p.shape[0].length) / 2), y: 0 };
+      return { shape: p.shape, color: p.color, x: 4, y: 0 };
     }
     
     function draw() {
@@ -71,8 +70,10 @@
     
     function clearLines() {
       let linesCleared = 0;
-      board = board.filter(row => row.some(val => !val)).concat(Array(ROWS - board.length).fill().map(() => Array(COLS).fill(0)));
-      score += linesCleared * 10;
+      board = board.filter(row => row.some(val => !val));
+      let newLines = ROWS - board.length;
+      board = [...Array(newLines).fill().map(() => Array(COLS).fill(0)), ...board];
+      score += newLines * 10;
       scoreDisplay.textContent = score;
     }
     
@@ -89,7 +90,7 @@
     
     function update() {
       if (Date.now() - dropStart > 1000) { drop(); dropStart = Date.now(); }
-      if (!gameOver) requestAnimationFrame(update);
+      requestAnimationFrame(update);
     }
     
     document.addEventListener('keydown', e => {
@@ -100,10 +101,10 @@
       if (e.key === ' ') hardDrop();
     });
     
-    document.getElementById('btnLeft').addEventListener('touchstart', () => move(-1));
-    document.getElementById('btnRight').addEventListener('touchstart', () => move(1));
-    document.getElementById('btnDown').addEventListener('touchstart', drop);
-    document.getElementById('btnRotate').addEventListener('touchstart', rotate);
+    document.getElementById('btnLeft').addEventListener('click', () => move(-1));
+    document.getElementById('btnRight').addEventListener('click', () => move(1));
+    document.getElementById('btnDown').addEventListener('click', drop);
+    document.getElementById('btnRotate').addEventListener('click', rotate);
     
     update();
   </script>
