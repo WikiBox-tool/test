@@ -36,7 +36,7 @@
   </div>
 
   <script>
-    // Canvas初期設定
+    // 初期設定
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -47,7 +47,7 @@
     canvas.width = COLS * BLOCK_SIZE;
     canvas.height = ROWS * BLOCK_SIZE;
 
-    // ゲーム盤の初期化（0:空、1:ブロックあり）
+    // ゲームの初期化
     let board = [];
     for (let r = 0; r < ROWS; r++) {
       board[r] = [];
@@ -56,7 +56,7 @@
       }
     }
 
-    // テトリスの各ピース（簡易版）
+    // テトリスの各ピース
     const pieces = [
       { shape: [[1,1,1,1]], color: 'cyan' },      // I
       { shape: [[1,1],[1,1]], color: 'yellow' },    // O
@@ -67,10 +67,10 @@
       { shape: [[0,1,1],[1,1,0]], color: 'red' }      // Z
     ];
 
-    // ランダムなピースを生成
+    // ピースを生成
     function randomPiece() {
       const p = pieces[Math.floor(Math.random() * pieces.length)];
-      // ピースは中央上部からスタート
+      // ピースは中央上部から
       return { shape: p.shape, color: p.color, x: Math.floor((COLS - p.shape[0].length) / 2), y: 0 };
     }
 
@@ -78,7 +78,7 @@
     let dropStart = Date.now();
     let gameOver = false;
 
-    // ブロック描画関数
+    // 描画関数
     function drawBlock(x, y, color) {
       ctx.fillStyle = color;
       ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -86,7 +86,7 @@
       ctx.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
     }
 
-    // 現在のピースを描画
+    // ピースを描画
     function drawPiece(piece) {
       for (let r = 0; r < piece.shape.length; r++) {
         for (let c = 0; c < piece.shape[r].length; c++) {
@@ -97,10 +97,10 @@
       }
     }
 
-    // 盤面と固定ブロックを再描画
+    // ブロックを再描画
     function undraw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // 固定されたブロックを描画
+      // 固定されたブロック
       for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
           if (board[r][c]) {
@@ -110,7 +110,7 @@
       }
     }
 
-    // 衝突判定
+    // 衝突
     function collision(piece, offsetX, offsetY) {
       for (let r = 0; r < piece.shape.length; r++) {
         for (let c = 0; c < piece.shape[r].length; c++) {
@@ -129,7 +129,7 @@
       return false;
     }
 
-    // ピースを固定してボードに反映
+    // ピースを固定
     function freeze() {
       for (let r = 0; r < currentPiece.shape.length; r++) {
         for (let c = 0; c < currentPiece.shape[r].length; c++) {
@@ -143,7 +143,7 @@
           }
         }
       }
-      // 完全な行の削除処理
+      // 完全な削除処理
       for(let r = 0; r < ROWS; r++){
         let isRowFull = true;
         for(let c = 0; c < COLS; c++){
@@ -166,7 +166,7 @@
       currentPiece = randomPiece();
     }
 
-    // ピースの回転処理
+    // 回転処理
     function rotate(piece) {
       let newShape = [];
       for (let c = 0; c < piece.shape[0].length; c++) {
@@ -179,7 +179,7 @@
       return newShape;
     }
 
-    // ピースを1段落下させる
+    // 1段落下
     function drop() {
       if (!collision(currentPiece, 0, 1)) {
         currentPiece.y++;
@@ -203,7 +203,7 @@
       }
     }
 
-    // ボタンタッチイベント（touchstartで反応）
+    // ボタンタッチイベント
     document.getElementById('btnLeft').addEventListener('touchstart', function(e) {
       e.preventDefault();
       if (!collision(currentPiece, -1, 0)) {
@@ -239,7 +239,7 @@
       drawPiece(currentPiece);
     });
 
-    // スマホの場合、タッチイベントに対応するためボタンのclickイベントも登録する（オプション）
+    // スマホの場合
     document.getElementById('btnLeft').addEventListener('click', function(e) {
       e.preventDefault();
       if (!collision(currentPiece, -1, 0)) {
